@@ -25,11 +25,10 @@ benthic.cd<-read_xlsx("NCRMP_FLORIDA2018_Benthic_DataDictionary06_Codes.xlsx", s
 cover.all<-cover%>%
   replace(is.na(.),0)%>%
   group_by(COVER_CAT_CD)%>%
-  summarise(h_num=sum(HARDBOTTOM_NUM), s_num=sum(SOFTBOTTOM_NUM), r_num=sum(RUBBLE_NUM))
- cover.sum<-cover.all %>%
+  summarise(h_num=sum(HARDBOTTOM_NUM), s_num=sum(SOFTBOTTOM_NUM), r_num=sum(RUBBLE_NUM)) %>%
    mutate(.,all= h_num+s_num+r_num) %>%
    rename(CODE = COVER_CAT_CD)
- join.cvr<-right_join(cover.sum,benthic.cd,by = "CODE") %>%
+ join.cvr<-right_join(cover.all,benthic.cd,by = "CODE") %>%
    drop_na() %>%
    group_by(Type) %>%
    summarise(a=sum(all))
