@@ -36,7 +36,7 @@ cover.all<-cover%>%
 #macro and turf together or separate?
  #in depth look of hard corals. pie? bar?
 
-pie(cover.group$a,labels = cover.group$a,col=rainbow(length(cover.group$a)),
+pie(join$all,labels = join$all,col=rainbow(length(cover.group$a)),
     main = "Type of Cover Observed")
 lbls<-as.vector(lpi$cover)
 legend("topright",lbls, cex = 0.7, fill= rainbow(length(lbls)))
