@@ -105,23 +105,14 @@ total.samp<-n_distinct(benthic$MASTER_SAMPLE_CD)
 #filter for 1, sum 1. after filter, calc percentages (new column)
 #percent esa corals present
 #0=absent, 1=present in transect, 2=presnt on dive, 3=did not look. ONLY look at 1
-A.pal<-benthic.esa$apal/total.samp
-A.cer<-benthic.esa$acer/total.samp
-D.cyl<-benthic.esa$dcyl/total.samp   
-M.fer<-benthic.esa$mfer/total.samp    
-M.ann<-benthic.esa$mann/total.samp   
-M.fra<-benthic.esa$mfra/total.samp   
-M.fav<-benthic.esa$mfav/total.samp  
-#dataframe use piping to get this
-esa.corals<-data.frame(corals=c("A.pal","A.cer","D.cyl","M.fer","M.ann","M.fra","M.fav"),
-                       perc=c(A.pal,A.cer,D.cyl,M.fer,M.ann,M.fra,M.fav)*100)
+
 #barplot
-esa.bar<-ggplot(esa.corals,aes(x=corals,y=perc))+geom_bar(stat="identity",
-          aes(fill=corals))+theme_classic()+
+esa.bar<-ggplot(benthic.esa,aes(x=reorder(Corals,-percentage),y=percentage))+geom_bar(stat="identity",
+          aes(fill=Corals))+theme_classic()+
   ggtitle("Percent Occurence of ESA Corals")+xlab("ESA Listed Corals")+
   ylab("Percentage Present")
 esa.bar
-#order by decreasing order
+
 
 #REEF FISH
 #PIE OF SPECIES
