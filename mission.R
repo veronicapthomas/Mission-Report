@@ -143,19 +143,10 @@ com.fish<-join.fish %>%
                                            "LUT MAHO","LUT SYNA","MYC BONA","MYC INTE",
                                            "MYC TIGR","MYC VENE","MYC PHEN","OCY CHRY",
                                            "LAC MAXI","PTE VOLI"))
-#similar 
-labels2<-c("Graysby","Coney","Rock Hind","Red Hind","Red Grouper", "Nassau Grouper",
-           "Mutton Snapper","Schoolmaster","Blackfin Snapper","Cubera Snapper",
-           "Gray Snapper","Dog Snapper","Mahogany Snapper","Lane Snapper","Black Grouper",
-           "Yellowmouth Grouper","Tiger Grouper","Yellowfin Grouper","Scamp","Yellowtail
-           Snapper","Hogfish","Red Lionfish")
-pie(com.fish$count,labels = com.fish$count, col=rainbow(length(labels2)),
+#pie chart doesnt look good
+pie(com.fish$count,labels = com.fish$count, col=rainbow(length(com.fish$SPECIES_CD)),
     main="Number of Commercial Fish Observed")
-legend("topright", c("Graysby","Coney","Rock Hind","Red Hind","Red Grouper", "Nassau Grouper",
-                     "Mutton Snapper","Schoolmaster","Blackfin Snapper","Cubera Snapper",
-                     "Gray Snapper","Dog Snapper","Mahogany Snapper","Lane Snapper","Black Grouper",
-                     "Yellowmouth Grouper","Tiger Grouper","Yellowfin Grouper","Scamp","Yellowtail
-           Snapper","Hogfish","Red Lionfish"), cex = 0.7, fill= rainbow(length(labels2)))
+legend("topright", com.fish$SPECIES_CD, cex = 0.7, fill= rainbow(length(com.fish$SPECIES_CD)))
 
 #barplot
 com.bar<-ggplot(com.fish,aes(x=SPECIES_CD,y=count))+geom_bar(stat="identity",
@@ -164,11 +155,59 @@ aes(fill=SPECIES_CD))+theme_classic()+coord_flip()+
                                     y="Total Counted")
 com.bar
 #different graph? stacked bar?try to remove yellowtail and maybe gray to see if scale is fixed
-com.stack<-ggplot(com.fish,aes(x=group,y=count))+geom_bar(stat="identity",
-                                                        aes(fill=SPECIES_CD))+theme_classic()+coord_flip()+
-  labs(title="Commercial and Recreational Fish Observed",x="Species",
-       y="Total Counted")
+com.stack<-ggplot(com.fish,aes(x=Groups,y=count))+geom_bar(stat="identity",
+aes(fill=SPECIES_CD))+theme_classic()+coord_flip()+
+  labs(title="Commercial and Recreational Fish Observed",x="Species",y="Total Counted")
 com.stack
 
+#without yellowtail snapper
+com.nosnap<-join.fish %>%
+  filter(SPECIES_CD %in% c("CEP CRUE","CEP FULV","EPI ADSC","EPI GUTT",
+                           "EPI MORI","EPI STRI","LUT ANAL","LUT APOD",
+                           "LUT BUCC","LUT CYAN","LUT GRIS","LUT JOCU",
+                           "LUT MAHO","LUT SYNA","MYC BONA","MYC INTE",
+                           "MYC TIGR","MYC VENE","MYC PHEN",
+                           "LAC MAXI","PTE VOLI"))
 
+#pie chart doesnt look good
+pie(com.nosnap$count,labels = com.nosnap$count, col=rainbow(length(com.nosnap$SPECIES_CD)),
+    main="Number of Commercial Fish Observed")
+legend("topright", com.nosnap$SPECIES_CD, cex = 0.7, fill= rainbow(length(com.nosnap$SPECIES_CD)))
 
+#barplot
+com.bar2<-ggplot(com.nosnap,aes(x=SPECIES_CD,y=count))+geom_bar(stat="identity",
+                                                             aes(fill=SPECIES_CD))+theme_classic()+coord_flip()+
+  labs(title="Commercial and Recreational Fish Observed",x="Species",
+       y="Total Counted")
+com.bar2
+#different graph? stacked bar?try to remove yellowtail and maybe gray to see if scale is fixed
+com.stack2<-ggplot(com.nosnap,aes(x=Groups,y=count))+geom_bar(stat="identity",
+                                                           aes(fill=SPECIES_CD))+theme_classic()+coord_flip()+
+  labs(title="Commercial and Recreational Fish Observed",x="Species",y="Total Counted")
+com.stack2
+
+#without yellowtail and gray snappers
+com.nosnap2<-join.fish %>%
+  filter(SPECIES_CD %in% c("CEP CRUE","CEP FULV","EPI ADSC","EPI GUTT",
+                           "EPI MORI","EPI STRI","LUT ANAL","LUT APOD",
+                           "LUT BUCC","LUT CYAN","LUT JOCU",
+                           "LUT MAHO","LUT SYNA","MYC BONA","MYC INTE",
+                           "MYC TIGR","MYC VENE","MYC PHEN",
+                           "LAC MAXI","PTE VOLI"))
+
+#pie chart doesnt look good
+pie(com.nosnap2$count,labels = com.nosnap2$count, col=rainbow(length(com.nosnap2$SPECIES_CD)),
+    main="Number of Commercial Fish Observed")
+legend("topright", com.nosnap$SPECIES_CD, cex = 0.7, fill= rainbow(length(com.nosnap2$SPECIES_CD)))
+
+#barplot looks a little better
+com.bar3<-ggplot(com.nosnap2,aes(x=SPECIES_CD,y=count))+geom_bar(stat="identity",
+                                                                aes(fill=SPECIES_CD))+theme_classic()+coord_flip()+
+  labs(title="Commercial and Recreational Fish Observed",x="Species",
+       y="Total Counted")
+com.bar3
+#stacked bar. looks best i think
+com.stack3<-ggplot(com.nosnap2,aes(x=Groups,y=count))+geom_bar(stat="identity",
+                                                              aes(fill=SPECIES_CD))+theme_classic()+coord_flip()+
+  labs(title="Commercial and Recreational Fish Observed",x="Species",y="Total Counted")
+com.stack3
