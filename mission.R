@@ -94,13 +94,17 @@ waffle(
 #ESA CORALS
 benthic<-read_xlsx("benthic_covers_downloads.xlsx", sheet = "BenthicCoverSample")
 benthic.esa<- benthic %>% 
-  summarise(apal=sum(A_PALMATA),acer=sum(A_CERVICORNIS),
-                 dcyl=sum(D_CYLINDRUS),mfer=sum(M_FEROX),mann=sum(M_ANNULARIS),
-                 mfra=sum(M_FRANKSI),mfav=sum(M_FAVEOLATA))
+  filter(A_PALMATA == "1" | A_CERVICORNIS == "1" | D_CYLINDRUS == "1" | M_FEROX == "1" |
+           M_ANNULARIS == "1" | M_FRANKSI == "1" | M_FAVEOLATA == "1") %>%  
+  summarise(apal=sum(A_PALMATA),acer=sum(A_CERVICORNIS),dcyl=sum(D_CYLINDRUS),
+            mfer=sum(M_FEROX),mann=sum(M_ANNULARIS),mfra=sum(M_FRANKSI),mfav=sum(M_FAVEOLATA)) %>%
+ pivot_longer(cols=apal:mfav,names_to="Corals",values_to="Occurence") %>%
+  mutate(.,percentage=(Occurence/total.samp)*100)
+
 total.samp<-n_distinct(benthic$MASTER_SAMPLE_CD)
 #filter for 1, sum 1. after filter, calc percentages (new column)
 #percent esa corals present
-#0 absent 1 present in transect 2 presnt on dive 3 did not look. ONLY look at 1
+#0=absent, 1=present in transect, 2=presnt on dive, 3=did not look. ONLY look at 1
 A.pal<-benthic.esa$apal/total.samp
 A.cer<-benthic.esa$acer/total.samp
 D.cyl<-benthic.esa$dcyl/total.samp   
