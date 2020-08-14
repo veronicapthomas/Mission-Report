@@ -32,13 +32,9 @@ cover.all<-cover%>%
    drop_na() 
  cover.type<- join.cvr %>%
    group_by(Type) %>%
-   summarise(a=sum(all)) %>%
-   anti_join(SPONGES,SPONGE,by = "a")
+   summarise(a=sum(all))
  
-#combine sponges, sponge also other invert, other, hydrocorals
- #is there a way to do this here or do i need to edit in excel?
- #in depth look of hard corals. pie? bar?
-
+#pie chart
 pie(cover.type$a,labels = cover.type$a,col=rainbow(length(cover.type$a)),
     main = "Type of Cover Observed")
 lbls<-as.vector(cover.type$Type)
@@ -54,9 +50,10 @@ g
 hard<-join.cvr %>%
   filter(Type == "HARD CORALS")
 
-h<-ggplot(hard,aes(x=CODE, y=all))+geom_bar(stat="identity",aes(fill=CODE))+coord_flip()+
-  theme_classic()+labs(title = "Count of Hard Corals Observed",x="Count",y="Species")
+h<-ggplot(hard,aes(x=Scientific_Name, y=all))+geom_bar(stat="identity",aes(fill=CODE))+coord_flip()+
+  theme_classic()+labs(title = "Count of Hard Corals Observed",x="Species",y="Count")
 h
+
 
 #CORAL DISEASE OBSERVED
 demo<-read_xlsx("coral_demographics_downloads.xlsx", sheet = "DemoCorals")
