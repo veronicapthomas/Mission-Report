@@ -82,11 +82,11 @@ demo.slow<-demo.dis %>%
 slow.perc<-(demo.slow$n/total)*100
 x=paste("Fast=",fast.perc$`n()`,"%",sep="")
 #research how to input string, name from a variable
-#other instead of present
+#other instead of present, does not say percentage in legend
 library(waffle)
 waffle(
-  c(x = fast.perc$`n()`, 'Slow=23%' = slow.perc$`n()`,
-    'Present=18%' = pres.perc$`n()`), 
+  c('Fast' = fast.perc$`n()`, 'Slow' = slow.perc$`n()`,
+    'Other' = pres.perc$`n()`), 
   rows = 10, colors = c("#FD6F6F", "darkgoldenrod1","cadetblue3"),
   title = 'Coral Disease Observed', legend_pos="bottom"
 )
