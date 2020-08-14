@@ -29,24 +29,34 @@ cover.all<-cover%>%
    mutate(.,all= h_num+s_num+r_num) %>%
    rename(CODE = COVER_CAT_CD)
  join.cvr<-right_join(cover.all,benthic.cd,by = "CODE") %>%
-   drop_na() %>%
+   drop_na() 
+ cover.type<- join.cvr %>%
    group_by(Type) %>%
-   summarise(a=sum(all))
+   summarise(a=sum(all)) %>%
+   anti_join(SPONGES,SPONGE,by = "a")
  
-#categories: hard coral, soft coral, sand, algae and turf, sponge, other. pie?
-#macro and turf together or separate?
+#combine sponges, sponge also other invert, other, hydrocorals
+ #is there a way to do this here or do i need to edit in excel?
  #in depth look of hard corals. pie? bar?
 
-pie(join.cvr$a,labels = join.cvr$a,col=rainbow(length(join.cvr$a)),
+pie(cover.type$a,labels = cover.type$a,col=rainbow(length(cover.type$a)),
     main = "Type of Cover Observed")
-lbls<-as.vector(join.cvr$Type)
+lbls<-as.vector(cover.type$Type)
 legend(0.8,0.9,lbls, cex = 0.5, fill= rainbow(length(lbls)))
 
 #barplot
-g<-ggplot(join.cvr,aes(x=Type,y=a))+geom_bar(stat="identity",aes(fill=Type))+coord_flip()
+g<-ggplot(cover.type,aes(x=Type,y=a))+geom_bar(stat="identity",aes(fill=Type))+coord_flip()
   theme_classic()+ggtitle("Type of Cover Observed")+xlab("Cover Types")+
   ylab("Count")
 g
+
+#Hard corals
+hard<-join.cvr %>%
+  filter(Type == "HARD CORALS")
+
+h<-ggplot(hard,aes(x=CODE, y=all))+geom_bar(stat="identity",aes(fill=CODE))+coord_flip()+
+  theme_classic()+labs(title = "Count of Hard Corals Observed",x="Count",y="Species")
+h
 
 #CORAL DISEASE OBSERVED
 demo<-read_xlsx("coral_demographics_downloads.xlsx", sheet = "DemoCorals")
