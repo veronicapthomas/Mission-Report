@@ -99,7 +99,6 @@ benthic.esa<- benthic %>%
   mutate(.,percentage=(Occurence/total.samp)*100)
 
 total.samp<-n_distinct(benthic$MASTER_SAMPLE_CD)
-#filter for 1, sum 1. after filter, calc percentages (new column)
 #percent esa corals present
 #0=absent, 1=present in transect, 2=presnt on dive, 3=did not look. ONLY look at 1
 
@@ -114,37 +113,30 @@ esa.bar
 #REEF FISH
 #PIE OF SPECIES
 fish<-read_xlsx("fish_downloads.xlsx", sheet = "species")
+master<-read_xlsx("NCRMP_Fish_SppList_Export.xlsx", sheet = "NCRMP_Fish_MasterList")
 fish.spp<-fish %>%
   group_by(SPECIES_CD)%>%
   summarise(count=sum(NUMBER_OF_INDIVIDUALS))
-# group into categories
-#remove and add column in species list, read in species list and join tables
+join.fish<-right_join(fish.spp,master,by = "SPECIES_CD") %>%
+  select(SPECIES_CD,count,SCIENTIFIC_NAME,COMMON_NAME,Groups) %>%
+  drop_na() 
+fish.groups<-join.fish %>%
+  group_by(Groups) %>%
+  summarise(num=sum(count))
 
-
-groups<-fish.spp %>%
-  group_by(group) %>%
-  summarise(total=sum(count))
-
-#come up with better grouping, is barplot better? gobi and blenni. rm silvery, surgeon, butterfly
-labels1<-c("Angelfish", "Blenny","Damselfish","Goby","Grunt","Hogfish","Jack","Other","Parrotfish",
-           "Porgy","Sea bass and groupers","Snapper","Wrasses")
-pie(groups$total,labels = groups$total, col=rainbow(length(labels1)),
+pie(fish.groups$num,labels = fish.groups$num, col=rainbow(length(fish.groups$Groups)),
     main="Number of Fish Observed")
-legend(1.45,1.4, c("Angelfish", "Blenny","Damselfish","Goby","Grunt","Hogfish","Jack","Other",
-                     "Parrotfish","Porgy","Sea bass and groupers","Snapper","Wrasses"), 
-       cex = 0.5, fill= rainbow(length(labels1)))
+legend("topright", fish.groups$Groups, cex = 0.5, fill= rainbow(length(fish.groups$Groups)))
 #barplot
-fish.bar<-ggplot(groups,aes(x=group,y=total))+geom_bar(stat="identity",aes(fill=group))+
+fish.bar<-ggplot(fish.groups,aes(x=reorder(Groups,-num),y=num))+geom_bar(stat="identity",aes(fill=Groups))+
   theme_classic()+coord_flip()+labs(title="Number of Fish Observed",x="Fish Groups",
                                     y="Total Counted")
-#wrasse (hogfish), snappers, groupers, parrot, grunt,goby and blenny, other, damselfish
-#how to make total counted axis look nicer?
 fish.bar
 
 #PIE OF COMMERCIAL, grouper-snapper complex
 #try to remove yellowtail and maybe gray to see if scale is fixed
 fish.spp
-com.fish<-fish.spp %>%
+com.fish<-join.fish %>%
   filter(SPECIES_CD %in% c("CEP CRUE","CEP FULV","EPI ADSC","EPI GUTT",
                                            "EPI MORI","EPI STRI","LUT ANAL","LUT APOD",
                                            "LUT BUCC","LUT CYAN","LUT GRIS","LUT JOCU",
