@@ -202,9 +202,9 @@ pie(com.nosnap2$count,labels = com.nosnap2$count, col=rainbow(length(com.nosnap2
 legend("topright", com.nosnap$SPECIES_CD, cex = 0.7, fill= rainbow(length(com.nosnap2$SPECIES_CD)))
 
 #barplot looks a little better
-com.bar3<-ggplot(com.nosnap2,aes(x=SPECIES_CD,y=count))+geom_bar(stat="identity",
-                                                                aes(fill=SPECIES_CD))+theme_classic()+coord_flip()+
-  labs(title="Commercial and Recreational Fish Observed",x="Species",
+com.bar3<-ggplot(com.nosnap2,aes(x=reorder(SCIENTIFIC_NAME,-count),y=count))+
+  geom_bar(stat="identity",aes(fill=SPECIES_CD,),show.legend = FALSE)+theme_classic()+
+  coord_flip()+labs(title="Commercial and Recreational Fish Observed",x="Species",
        y="Total Counted")
 com.bar3
 #stacked bar. looks best i think
