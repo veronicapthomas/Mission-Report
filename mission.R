@@ -41,7 +41,7 @@ lbls<-as.vector(cover.type$Type)
 legend(0.8,0.9,lbls, cex = 0.5, fill= rainbow(length(lbls)))
 
 #barplot
-g<-ggplot(cover.type,aes(x=Type,y=a))+geom_bar(stat="identity",aes(fill=Type))+coord_flip()
+g<-ggplot(cover.type,aes(x=reorder(Type,-a),y=a))+geom_bar(stat="identity",aes(fill=Type))+coord_flip()
   theme_classic()+ggtitle("Type of Cover Observed")+xlab("Cover Types")+
   ylab("Count")
 g
@@ -50,10 +50,11 @@ g
 hard<-join.cvr %>%
   filter(Type == "HARD CORALS")
 
-h<-ggplot(hard,aes(x=Scientific_Name, y=all))+geom_bar(stat="identity",aes(fill=CODE))+coord_flip()+
-  theme_classic()+labs(title = "Count of Hard Corals Observed",x="Species",y="Count")
+h<-ggplot(hard,aes(x=reorder(Scientific_Name,-all), y=all))+
+  geom_bar(stat="identity",aes(fill=as.factor(Scientific_Name)),show.legend = FALSE)+
+  coord_flip()+theme_classic()+
+  labs(title = "Count of Hard Corals Observed",x="Species",y="Count")
 h
-
 
 #CORAL DISEASE OBSERVED
 demo<-read_xlsx("coral_demographics_downloads.xlsx", sheet = "DemoCorals")
